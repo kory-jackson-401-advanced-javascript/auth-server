@@ -7,7 +7,7 @@
 ### Links and Resources
 
 - [ci/cd](http://xyz.com) (GitHub Actions)
-- [back-end server url](https://lab11auth.herokuapp.com/) (when applicable)
+- back-end server url: https://lab11auth.herokuapp.com/
 
 ### Setup
 
@@ -32,8 +32,7 @@
 
 ### Links and Resources
 
-- [ci/cd](http://xyz.com) (GitHub Actions)
-- [back-end server url](https://lab11auth.herokuapp.com/) (when applicable)
+- back-end server url: https://bearerauth.herokuapp.com/
 
 ### Setup
 
@@ -42,6 +41,7 @@
 - Use the url up top in any http request (i.e. insomnia, httpie)
 - use endpoint /signup to create a user
 - use endpoint /signin to Log in as user and get your token
+- Grab token and do a get to /secret with the auth headers set to that token and you should get a "Welcome, **user**"
 
 
 #### How to use your library (where applicable)
