@@ -19,6 +19,7 @@ const express = require("express");
 const users = require("./models/users-model.js");
 const basicAuth = require("./middleware/basic.js");
 const bearer = require("./middleware/bearer.js");
+const permissions = require("./middleware/permissions.js");
 
 const router = express.Router();
 
@@ -27,6 +28,7 @@ router.post("/signup", async (req, res, next) => {
     let userObj = {
       username: req.body.username,
       password: req.body.password,
+      role: req.body.role,
     };
 
     let record = new users(userObj);
@@ -59,5 +61,23 @@ router.post("/signin", basicAuth, (req, res, next) => {
 router.get("/secret", bearer, (req, res) => {
   res.status(200).send(`Welcome, ${req.user.username}`);
 });
+
+router.get("/article", bearer, permissions("read"), (req, res) => {
+  res.status(200).send("You have permission to READ");
+});
+
+router.post("/article", bearer, permissions("create"), (req, res) => {
+  res.status(200).send("You have permission to CREATE");
+});
+
+router.put("/article", bearer, permissions("update"), (req, res) => {
+  res.status(200).send("You have permission to UPDATAE");
+});
+
+router.delete("/article", bearer, permissions("delete"), (req, res) => {
+  res.status(200).send("You have permission to DELETE")
+})
+
+
 
 module.exports = router;
