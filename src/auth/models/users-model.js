@@ -17,6 +17,7 @@ const secret = process.env.SECRET;
 const users = mongoose.Schema({
   username: { type: String, required: true },
   password: { type: String, required: true },
+  role: { type: String }
 });
 
 users.pre('save', async function () {
@@ -36,6 +37,16 @@ users.statics.validateBasicAuth = async function (username, password) {
 
   if (isValid) { return user; }
   else { return undefined; }
+}
+
+users.statics.authenticateWithToken = async function (token) {
+  try {
+    const specialToken = jwt.verify(token, process.env.SECRET);
+    const user = this.findOne({ username: specialToken.username })
+    return user;
+  } catch (e) {
+    throw new Error(e.message)
+  }
 }
 
 module.exports = mongoose.model('users', users);

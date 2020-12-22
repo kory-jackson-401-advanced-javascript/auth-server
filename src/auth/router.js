@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /* 
   -create a POST route for /signup
@@ -15,13 +15,14 @@
     - Stretch Goal: have this route also use the middleware for authentication so that you cannot see the user list without a valid username and password
 */
 
-const express = require('express');
-const users = require('./models/users-model.js');
-const basicAuth = require('./middleware/basic.js');
+const express = require("express");
+const users = require("./models/users-model.js");
+const basicAuth = require("./middleware/basic.js");
+const bearer = require("./middleware/bearer.js");
 
 const router = express.Router();
 
-router.post('/signup', async (req, res, next) => {
+router.post("/signup", async (req, res, next) => {
   try {
     let userObj = {
       username: req.body.username,
@@ -33,26 +34,30 @@ router.post('/signup', async (req, res, next) => {
     let newUser = await record.save();
     let token = record.generateToken();
 
-    res.set('auth', token);
+    res.set("auth", token);
     let userObject = {
       token: token,
-      user: newUser
-    }
+      user: newUser,
+    };
 
     res.status(201).send(userObject);
   } catch (e) {
     next(e.message);
   }
-})
+});
 
-router.post('/signin', basicAuth, (req, res, next) => {
+router.post("/signin", basicAuth, (req, res, next) => {
   console.log(req.user);
-  res.set('auth', req.token)
+  res.set("auth", req.token);
   let output = {
     token: req.token,
     user: req.username,
-  }
+  };
   res.status(200).json(output);
+});
+
+router.get("/secret", bearer, (req, res) => {
+  res.status(200).send(`Welcome, ${req.user.username}`);
 });
 
 module.exports = router;
